@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lifo
+  labels:
+    app: lifo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lifo
+  template:
+    metadata:
+      labels:
+        app: lifo
+    spec:
+      containers:
+      - name: lifo
+        image: docker.io/avinaba91/lifo:1.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_HOST
+          value: mariadb
+          
+--- 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: lifo
+  labels: 
+    app: lifo
+spec:
+  selector:
+    app: lifo
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: NodePort
